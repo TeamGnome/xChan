@@ -1,0 +1,172 @@
+﻿<Window x:Class="xChan.entryWnd"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:xChan"
+        mc:Ignorable="d"
+        Title="xChan" Height="480" Width="800" Icon="BetaIcon.ico">
+    <Grid>
+        <TabControl x:Name="controlTabs" TabStripPlacement="Left">
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock>Site</TextBlock>
+                </TabItem.Header>
+                <Grid>
+                    <ListView x:Name="siteLst" Grid.Row="1" Grid.Column="0" Margin="4" SelectionMode="Single" SelectionChanged="siteLst_SelectionChanged">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Height="32" Width="Auto">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="32" />
+                                        <ColumnDefinition Width="6" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Image Source="{Binding LogoUri}" Grid.Column="0" RenderOptions.BitmapScalingMode="HighQuality" />
+                                    <TextBlock Text="{Binding DisplayName}" Grid.Column="2" VerticalAlignment="Center" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock>Board</TextBlock>
+                </TabItem.Header>
+                <Grid>
+                    <ListView x:Name="boardLst" Grid.Row="1" Grid.Column="1" Margin="4" SelectionMode="Single" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionChanged="boardLst_SelectionChanged">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock TextWrapping="Wrap">/<Run Text="{Binding UrlSlug}" />/ - <Run Text="{Binding Title}" /></TextBlock>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel VirtualizingPanel.ScrollUnit="Pixel" />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                    </ListView>
+                </Grid>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock>Thread</TextBlock>
+                </TabItem.Header>
+                <Grid>
+                    <ListView x:Name="threadLst" Grid.Row="1" Grid.Column="2" Margin="4" SelectionMode="Single" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="false" SelectionChanged="threadLst_SelectionChanged">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,10" HorizontalAlignment="Stretch">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="130" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Image Width="120" MaxHeight="120" Margin="0,0,10,0" Source="{Binding ThumbnailUri}" VerticalAlignment="Top" HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="0" />
+                                    <Grid HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="1">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="{Binding SubjectSafe}" FontWeight="Bold" TextWrapping="WrapWithOverflow" Grid.Row="0" />
+                                        <TextBlock Text="{Binding ContentSafe}" TextWrapping="WrapWithOverflow" Grid.Row="1" MaxHeight="175" />
+                                    </Grid>
+                                    <Grid HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,10,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="3*" />
+                                            <ColumnDefinition Width="3*" />
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock TextAlignment="Left" Grid.Column="0">
+                                            <TextBlock.Text>
+                                                <MultiBinding StringFormat="{}{0} posts">
+                                                    <Binding Path="Posts" />
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                        <TextBlock TextAlignment="Center" Grid.Column="1">
+                                            <TextBlock.Text>
+                                                <MultiBinding StringFormat="{}{0} files">
+                                                    <Binding Path="Files" />
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                        <TextBlock TextAlignment="Center" Grid.Column="2">
+                                            <TextBlock.Text>
+                                                <MultiBinding StringFormat="{}Created {0}">
+                                                    <Binding Path="CreatedString" />
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                        <TextBlock TextAlignment="Right" Grid.Column="3">
+                                            <TextBlock.Text>
+                                                <MultiBinding StringFormat="{}Updated {0}">
+                                                    <Binding Path="PostedString" />
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                        <Grid.Resources>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="LightSlateGray" />
+                                                <Setter Property="FontSize" Value="8" />
+                                                <Setter Property="FontWeight" Value="SemiBold" />
+                                            </Style>
+                                        </Grid.Resources>
+                                    </Grid>
+                                    <Grid.Resources>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <Trigger Property="Text" Value="">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Grid.Resources>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel VirtualizingPanel.ScrollUnit="Pixel" />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.Resources>
+                            <ContextMenu x:Key="itemContextMenu">
+                                <MenuItem Header="_Download" ToolTip="Download this thread" Click="downloadThreadClick" />
+                            </ContextMenu>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="ContextMenu" Value="{StaticResource itemContextMenu}" />
+                                <EventSetter Event="MouseDoubleClick" Handler="itemOpen" />
+                            </Style>
+                        </ListView.Resources>
+                    </ListView>
+                </Grid>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock>Images</TextBlock>
+                </TabItem.Header>
+                <Grid>
+                    <ListView x:Name="imageLst" Grid.Row="1" Grid.Column="2" Margin="4" SelectionMode="Extended" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="false">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Image Source="{Binding FileUri}" Grid.Column="0" Width="192" Height="192" Stretch="Uniform" StretchDirection="DownOnly" />
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                    </ListView>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
