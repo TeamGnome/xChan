@@ -6,18 +6,38 @@
         xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:local="clr-namespace:xChan"
         mc:Ignorable="d"
-        Title="xChan" Height="480" Width="800" Icon="BetaIcon.ico">
+        Title="xChan" Height="720" Width="1280" Icon="BetaIcon.ico">
+    <Window.Resources>
+        <Style TargetType="{x:Type TabItem}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TabItem}">
+                        <Grid>
+                            <Border Margin="12,12,4,0" Background="Transparent">
+                                <TextBlock x:Name="ContentBlock" Margin="0,2" Foreground="White">
+                                    <ContentPresenter ContentSource="Header" RecognizesAccessKey="True" />
+                                </TextBlock>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="ContentBlock" Property="FontWeight" Value="Bold" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <Grid>
-        <TabControl x:Name="controlTabs" TabStripPlacement="Left">
+        <TabControl x:Name="controlTabs" TabStripPlacement="Left" SelectionChanged="controlTabs_SelectionChanged">
             <TabItem>
-                <TabItem.Header>
-                    <TextBlock>Site</TextBlock>
-                </TabItem.Header>
+                <TabItem.Header>SITE</TabItem.Header>
                 <Grid>
-                    <ListView x:Name="siteLst" Grid.Row="1" Grid.Column="0" Margin="4" SelectionMode="Single" SelectionChanged="siteLst_SelectionChanged">
+                    <ListView x:Name="siteLst" Grid.Row="1" Grid.Column="0" Margin="4" SelectionMode="Single" SelectionChanged="siteLst_SelectionChanged" BorderThickness="0">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <Grid Height="32" Width="Auto">
+                                <Grid Height="32" Width="Auto" Margin="8,4">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="32" />
                                         <ColumnDefinition Width="6" />
@@ -31,15 +51,22 @@
                     </ListView>
                 </Grid>
             </TabItem>
-            <TabItem>
-                <TabItem.Header>
-                    <TextBlock>Board</TextBlock>
-                </TabItem.Header>
+            <TabItem Visibility="Hidden">
+                <TabItem.Header>BOARD</TabItem.Header>
                 <Grid>
-                    <ListView x:Name="boardLst" Grid.Row="1" Grid.Column="1" Margin="4" SelectionMode="Single" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionChanged="boardLst_SelectionChanged">
+                    <ListView x:Name="boardLst" Grid.Row="1" Grid.Column="1" Margin="4" SelectionMode="Single" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionChanged="boardLst_SelectionChanged" BorderThickness="0">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock TextWrapping="Wrap">/<Run Text="{Binding UrlSlug}" />/ - <Run Text="{Binding Title}" /></TextBlock>
+                                <TextBlock TextWrapping="Wrap" Margin="8,4">
+                                    <Run FontWeight="Bold">
+                                        <Run.Text>
+                                            <MultiBinding StringFormat="{}/{0}/">
+                                                <Binding Path="UrlSlug" />
+                                            </MultiBinding>
+                                        </Run.Text>
+                                    </Run> -
+                                        <Run Text="{Binding Title}" />
+                                </TextBlock>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                         <ListView.ItemsPanel>
@@ -50,12 +77,10 @@
                     </ListView>
                 </Grid>
             </TabItem>
-            <TabItem>
-                <TabItem.Header>
-                    <TextBlock>Thread</TextBlock>
-                </TabItem.Header>
+            <TabItem Visibility="Hidden">
+                <TabItem.Header>THREAD</TabItem.Header>
                 <Grid>
-                    <ListView x:Name="threadLst" Grid.Row="1" Grid.Column="2" Margin="4" SelectionMode="Single" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="false" SelectionChanged="threadLst_SelectionChanged">
+                    <ListView x:Name="threadLst" Grid.Row="1" Grid.Column="2" Margin="4" SelectionMode="Single" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="false" SelectionChanged="threadLst_SelectionChanged" BorderThickness="0">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <Grid Margin="0,10" HorizontalAlignment="Stretch">
@@ -74,8 +99,8 @@
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
-                                        <TextBlock Text="{Binding SubjectSafe}" FontWeight="Bold" TextWrapping="WrapWithOverflow" Grid.Row="0" />
-                                        <TextBlock Text="{Binding ContentSafe}" TextWrapping="WrapWithOverflow" Grid.Row="1" MaxHeight="175" />
+                                        <TextBlock Text="{Binding SubjectSafe}" Foreground="White" FontWeight="Bold" TextWrapping="WrapWithOverflow" Grid.Row="0" />
+                                        <TextBlock Text="{Binding ContentSafe}" Foreground="WhiteSmoke" TextWrapping="WrapWithOverflow" Grid.Row="1" MaxHeight="175" />
                                     </Grid>
                                     <Grid HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,10,0,0">
                                         <Grid.ColumnDefinitions>
@@ -149,19 +174,17 @@
                     </ListView>
                 </Grid>
             </TabItem>
-            <TabItem>
-                <TabItem.Header>
-                    <TextBlock>Images</TextBlock>
-                </TabItem.Header>
+            <TabItem Visibility="Hidden">
+                <TabItem.Header>IMAGES</TabItem.Header>
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
-                        <RowDefinition Height="32" />
+                        <RowDefinition Height="36" />
                     </Grid.RowDefinitions>
-                    <ListView x:Name="imageLst" Grid.Row="0" Margin="4" SelectionMode="Extended" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="false">
+                    <ListView x:Name="imageLst" Grid.Row="0" Margin="4" SelectionMode="Extended" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="false" BorderThickness="0">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <Image Source="{Binding ThumbnailUri}" Grid.Column="0" Width="128" Height="128" Stretch="Uniform" StretchDirection="DownOnly" Margin="4" />
+                                <Image Source="{Binding ThumbnailUri}" Grid.Column="0" Width="128" MaxHeight="128" Stretch="Uniform" StretchDirection="DownOnly" Margin="4" VerticalAlignment="Top" />
                             </DataTemplate>
                         </ListView.ItemTemplate>
                         <ListView.ItemsPanel>
@@ -170,7 +193,7 @@
                             </ItemsPanelTemplate>
                         </ListView.ItemsPanel>
                     </ListView>
-                    <Button x:Name="imageDownloadBtn" Grid.Row="1" HorizontalAlignment="Left" Margin="4" Click="imageDownloadBtn_Click">
+                    <Button x:Name="imageDownloadBtn" Grid.Row="1" HorizontalAlignment="Left" Margin="8,4" Click="imageDownloadBtn_Click">
                         _Download
                     </Button>
                 </Grid>

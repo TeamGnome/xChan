@@ -44,6 +44,8 @@ namespace xChan
 
             boardLst.ItemsSource = await bc.GetBoardsAsync();
             boardLst.ScrollIntoView(boardLst.Items[0]);
+
+            (controlTabs.Items[1] as TabItem).Visibility = Visibility.Visible;
             controlTabs.SelectedIndex = 1;
         }
 
@@ -68,6 +70,8 @@ namespace xChan
 
             threadLst.ItemsSource = threads.OrderByDescending(t => t.Posts);
             threadLst.ScrollIntoView(threadLst.Items[0]);
+
+            (controlTabs.Items[2] as TabItem).Visibility = Visibility.Visible;
             controlTabs.SelectedIndex = 2;
         }
 
@@ -96,7 +100,47 @@ namespace xChan
             {
                 imageLst.ScrollIntoView(imageLst.Items[0]);
             }
+
+            (controlTabs.Items[3] as TabItem).Visibility = Visibility.Visible;
             controlTabs.SelectedIndex = 3;
+        }
+
+        private void controlTabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!(e.Source is TabControl))
+            {
+                // we only want to handle user navigation, not selection changes prompted by other controls
+                return;
+            }
+
+            int start = controlTabs.SelectedIndex + 1;
+
+            if (start== controlTabs.Items.Count)
+            {
+                // the last tab has been selected
+                return;
+            }
+
+            for(; start < controlTabs.Items.Count; start++)
+            {
+                (controlTabs.Items[start] as TabItem).Visibility = Visibility.Hidden;
+            }
+
+            switch(controlTabs.SelectedIndex)
+            {
+                case 0:
+                    siteLst.SelectedIndex = -1;
+                    break;
+                case 1:
+                    boardLst.SelectedIndex = -1;
+                    break;
+                case 2:
+                    threadLst.SelectedIndex = -1;
+                    break;
+                case 3:
+                    imageLst.SelectedIndex = -1;
+                    break;
+            }
         }
 
         private void downloadThreadClick(object sender, RoutedEventArgs e)
@@ -113,7 +157,7 @@ namespace xChan
 
         private void imageDownloadBtn_Click(object sender, RoutedEventArgs e)
         {
-            if(!Directory.Exists("DUMP"))
+            if (!Directory.Exists("DUMP"))
             {
                 Directory.CreateDirectory("DUMP");
             }
