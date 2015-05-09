@@ -1,8 +1,11 @@
 ﻿using LibChan;
 using LibChan.ViewModels;
+using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,14 +15,13 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace xChan
 {
     /// <summary>
     /// Interaction logic for entryWnd.xaml
     /// </summary>
-    public partial class entryWnd : Window
+    public partial class entryWnd : MetroWindow
     {
         public entryWnd()
         {
@@ -107,6 +109,22 @@ namespace xChan
         private void itemOpen(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void imageDownloadBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if(!Directory.Exists("DUMP"))
+            {
+                Directory.CreateDirectory("DUMP");
+            }
+
+            using (WebClient wc = new WebClient())
+            {
+                foreach (ChanPostFile item in imageLst.SelectedItems)
+                {
+                    wc.DownloadFile(item.Uri, Path.Combine(@"DUMP", string.Format("{0}{1}", item.MD5String, item.Extension)));
+                }
+            }
         }
     }
 }

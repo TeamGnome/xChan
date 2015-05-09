@@ -32,13 +32,19 @@ namespace LibChan.ViewModels
 
     public class ChanPostFile
     {
-        public string FileUri { get; set; }
+        public string Uri { get; set; }
         public string ThumbnailUri { get; set; }
-        public string FileName { get; set; }
-        public string FileExtension { get; set; }
-        public int FileHeight { get; set; }
-        public int FileWidth { get; set; }
-        public long FileSize { get; set; }
+        public string Name { get; set; }
+        public string Extension { get; set; }
+        public int Height { get; set; }
+        public int Width { get; set; }
+        public long Size { get; set; }
+        public byte[] MD5 { get; set; }
+
+        public string MD5String
+        {
+            get { return string.Join("", MD5.Select(h => h.ToString("X2"))).ToLower(); }
+        }
     }
 
     public interface IChanThreadPost

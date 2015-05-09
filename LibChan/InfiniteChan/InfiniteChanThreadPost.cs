@@ -88,13 +88,14 @@ namespace LibChan.InfiniteChan
             {
                 files.Add(new ChanPostFile()
                 {
-                    FileUri = string.Format("https://8ch.net/{0}/thumb/{1}.jpg", slug, FileId),
-                    ThumbnailUri = string.Format("https://8ch.net/{0}/res/{1}.{2}", slug, FileId, FileExtension),
-                    FileName = FileName,
-                    FileExtension = FileExtension,
-                    FileHeight = FileHeight,
-                    FileWidth = FileWidth,
-                    FileSize = FileSize
+                    Uri = string.Format("https://8ch.net/{0}/src/{1}{2}", slug, FileId, FileExtension),
+                    ThumbnailUri = string.Format("https://8ch.net/{0}/thumb/{1}.jpg", slug, FileId),
+                    Name = FileName,
+                    Extension = FileExtension,
+                    Height = FileHeight,
+                    Width = FileWidth,
+                    Size = FileSize,
+                    MD5 = FileMd5
                 });
             }
 
@@ -103,13 +104,14 @@ namespace LibChan.InfiniteChan
                 files.AddRange(from f in ExtraFiles
                                select new ChanPostFile()
                                {
-                                   FileUri = string.Format("https://8ch.net/{0}/thumb/{1}.jpg", slug, f.FileId),
-                                   ThumbnailUri = string.Format("https://8ch.net/{0}/res/{1}.{2}", slug, f.FileId, f.FileExtension),
-                                   FileName = f.FileName,
-                                   FileExtension = f.FileExtension,
-                                   FileHeight = f.FileHeight,
-                                   FileWidth = f.FileWidth,
-                                   FileSize = f.FileSize
+                                   Uri = string.Format("https://8ch.net/{0}/src/{1}{2}", slug, f.FileId, f.FileExtension),
+                                   ThumbnailUri = string.Format("https://8ch.net/{0}/thumb/{1}.jpg", slug, f.FileId),
+                                   Name = f.FileName,
+                                   Extension = f.FileExtension,
+                                   Height = f.FileHeight,
+                                   Width = f.FileWidth,
+                                   Size = f.FileSize,
+                                   MD5 = f.FileMd5
                                });
             }
 

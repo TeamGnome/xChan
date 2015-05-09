@@ -73,7 +73,7 @@ namespace LibChan.FourChan
         public int FileSize { get; set; }
 
         [JsonProperty(PropertyName = "md5")]
-        public string FileMD5 { get; set; }
+        public byte[] FileMD5 { get; set; }
 
         [JsonProperty(PropertyName = "w")]
         public int ImageWidth { get; set; }
@@ -137,13 +137,14 @@ namespace LibChan.FourChan
             {
                 files.Add(new ChanPostFile()
                 {
-                    FileUri = string.Format("https://i.4cdn.org/{0}/{1}s.jpg", slug, FileName),
-                    ThumbnailUri = string.Format("https://i.4cdn.org/{0}/{1}.{2}", slug, FileName, FileExtension),
-                    FileName = FileName,
-                    FileExtension = FileExtension,
-                    FileHeight = ImageHeight,
-                    FileWidth = ImageWidth,
-                    FileSize = FileSize
+                    Uri = string.Format("https://i.4cdn.org/{0}/{1}{2}", slug, FileName, FileExtension),
+                    ThumbnailUri = string.Format("https://i.4cdn.org/{0}/{1}s.jpg", slug, FileName),
+                    Name = FileName,
+                    Extension = FileExtension,
+                    Height = ImageHeight,
+                    Width = ImageWidth,
+                    Size = FileSize,
+                    MD5 = FileMD5
                 });
             }
 
