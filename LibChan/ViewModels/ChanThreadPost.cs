@@ -35,12 +35,21 @@ namespace LibChan.ViewModels
         public string Uri { get; set; }
         public string ThumbnailUri { get; set; }
         public string Name { get; set; }
+        public string Original { get; set; }
         public string Extension { get; set; }
         public int Height { get; set; }
         public int Width { get; set; }
         public long Size { get; set; }
         public byte[] MD5 { get; set; }
 
+        public string SizeWithUnit
+        {
+            get
+            {
+                var humanised = Size.Bytes();
+                return string.Format("{0:F2}{1}", humanised.LargestWholeNumberValue, humanised.LargestWholeNumberSymbol);
+            }
+        }
         public string MD5String
         {
             get { return string.Join("", MD5.Select(h => h.ToString("X2"))).ToLower(); }

@@ -140,6 +140,7 @@ namespace LibChan.FourChan
                     Uri = string.Format("https://i.4cdn.org/{0}/{1}{2}", slug, FileName, FileExtension),
                     ThumbnailUri = string.Format("https://i.4cdn.org/{0}/{1}s.jpg", slug, FileName),
                     Name = FileName,
+                    Original = FileOriginalName,
                     Extension = FileExtension,
                     Height = ImageHeight,
                     Width = ImageWidth,

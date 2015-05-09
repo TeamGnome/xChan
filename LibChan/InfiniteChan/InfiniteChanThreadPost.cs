@@ -90,7 +90,8 @@ namespace LibChan.InfiniteChan
                 {
                     Uri = string.Format("https://8ch.net/{0}/src/{1}{2}", slug, FileId, FileExtension),
                     ThumbnailUri = string.Format("https://8ch.net/{0}/thumb/{1}.jpg", slug, FileId),
-                    Name = FileName,
+                    Name = FileId,
+                    Original = FileName,
                     Extension = FileExtension,
                     Height = FileHeight,
                     Width = FileWidth,
@@ -106,7 +107,8 @@ namespace LibChan.InfiniteChan
                                {
                                    Uri = string.Format("https://8ch.net/{0}/src/{1}{2}", slug, f.FileId, f.FileExtension),
                                    ThumbnailUri = string.Format("https://8ch.net/{0}/thumb/{1}.jpg", slug, f.FileId),
-                                   Name = f.FileName,
+                                   Name = f.FileId,
+                                   Original = f.FileName,
                                    Extension = f.FileExtension,
                                    Height = f.FileHeight,
                                    Width = f.FileWidth,

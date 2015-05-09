@@ -177,7 +177,7 @@ namespace xChan
                     break;
                 case 1:
                     boardLst.SelectedIndex = -1;
-                    updateBreadCrumbs(SiteCrumb.Text.TrimEnd(new [] { ' ', '>' }));
+                    updateBreadCrumbs(SiteCrumb.Text.TrimEnd(new[] { ' ', '>' }));
                     break;
                 case 2:
                     threadLst.SelectedIndex = -1;
@@ -196,25 +196,37 @@ namespace xChan
             return;
         }
 
-        private void itemOpen(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void imageDownloadBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (!Directory.Exists("DUMP"))
+            string path = string.IsNullOrEmpty(Properties.Settings.Default.RootFolder) ? "DUMP" : Properties.Settings.Default.RootFolder;
+            if (!Directory.Exists(path))
             {
-                Directory.CreateDirectory("DUMP");
+                Directory.CreateDirectory(path);
             }
 
-            using (WebClient wc = new WebClient())
+            string allPath = Path.Combine(path, "[ALL]");
+            if (!Directory.Exists(allPath))
             {
-                foreach (ChanPostFile item in imageLst.SelectedItems)
+                Directory.CreateDirectory(allPath);
+            }
+
+            List<Task> tl = new List<Task>();
+            foreach (ChanPostFile item in imageLst.SelectedItems)
+            {
+                using (WebClient wc = new WebClient())
                 {
-                    wc.DownloadFile(item.Uri, Path.Combine(@"DUMP", string.Format("{0}{1}", item.MD5String, item.Extension)));
+                    var dlTask = wc.DownloadFileTaskAsync(item.Uri, Path.Combine(allPath, string.Format("{0}{1}", item.MD5String, item.Extension)));
+                    tl.Add(dlTask);
                 }
             }
+
+            Task.WhenAll(tl).ContinueWith((t) =>
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    MessageBox.Show("COMPLETE");
+                });
+            });
         }
 
         private void updateBreadCrumbs(string site = "", string board = "", string thread = "")
@@ -266,6 +278,22 @@ namespace xChan
                     SiteCrumb.Text += " >";
                 }
                 setBoldPart = true;
+            }
+        }
+
+        private void openSettings(object sender, RoutedEventArgs e)
+        {
+            settingWnd settings = new settingWnd();
+            settings.ShowDialog();
+        }
+
+        private void openPreview(object sender, MouseButtonEventArgs e)
+        {
+            if(e.ClickCount == 2)
+            {
+                previewWnd pw = new previewWnd();
+                pw.DataContext = (sender as Image).DataContext;
+                pw.ShowDialog();
             }
         }
     }
