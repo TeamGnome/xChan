@@ -6,7 +6,7 @@
         xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:local="clr-namespace:xChan"
         mc:Ignorable="d"
-        Title="xChan" Height="720" Width="1280" Icon="BetaIcon.ico">
+        Title="xChan" Height="720" Width="1280">
     <Window.Resources>
         <Style TargetType="{x:Type TabItem}">
             <Setter Property="Template">
@@ -15,7 +15,7 @@
                         <Grid>
                             <Border Margin="12,12,4,0" Background="Transparent">
                                 <TextBlock x:Name="ContentBlock" Margin="0,2" Foreground="White">
-                                    <ContentPresenter ContentSource="Header" RecognizesAccessKey="True" />
+                                    <ContentPresenter ContentSource="Header" />
                                 </TextBlock>
                             </Border>
                         </Grid>
@@ -37,10 +37,10 @@
                     <ListView x:Name="siteLst" Grid.Row="1" Grid.Column="0" Margin="4" SelectionMode="Single" SelectionChanged="siteLst_SelectionChanged" BorderThickness="0">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <Grid Height="32" Width="Auto" Margin="8,4">
+                                <Grid MinHeight="36" MaxHeight="48" Width="Auto" Margin="8,6">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="32" />
-                                        <ColumnDefinition Width="6" />
+                                        <ColumnDefinition Width="48" />
+                                        <ColumnDefinition Width="8" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
                                     <Image Source="{Binding LogoUri}" Grid.Column="0" RenderOptions.BitmapScalingMode="HighQuality" />

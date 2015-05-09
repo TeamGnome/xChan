@@ -30,7 +30,7 @@ namespace xChan
             siteLst.ItemsSource = ChanManager.ChanWebsites;
         }
 
-        private async void siteLst_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void siteLst_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             BaseChan bc = siteLst.SelectedValue as BaseChan;
 
@@ -42,14 +42,24 @@ namespace xChan
             boardLst.ItemsSource = null;
             threadLst.ItemsSource = null;
 
-            boardLst.ItemsSource = await bc.GetBoardsAsync();
-            boardLst.ScrollIntoView(boardLst.Items[0]);
+            Task t = new Task(async () =>
+            {
+                var boards = await bc.GetBoardsAsync();
 
-            (controlTabs.Items[1] as TabItem).Visibility = Visibility.Visible;
-            controlTabs.SelectedIndex = 1;
+                await Dispatcher.InvokeAsync(() =>
+                {
+                    boardLst.ItemsSource = boards;
+                    boardLst.ScrollIntoView(boardLst.Items[0]);
+
+                    (controlTabs.Items[1] as TabItem).Visibility = Visibility.Visible;
+                    controlTabs.SelectedIndex = 1;
+                });
+            });
+
+            t.Start();
         }
 
-        private async void boardLst_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void boardLst_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             BaseChan bc = siteLst.SelectedValue as BaseChan;
             ChanBoard cb = boardLst.SelectedValue as ChanBoard;
@@ -61,21 +71,29 @@ namespace xChan
 
             threadLst.ItemsSource = null;
 
-            var threads = await bc.GetCatalogForBoardAsync(cb.UrlSlug);
-
-            if (threads == null || threads.Count() == 0)
+            Task t = new Task(async () =>
             {
-                return;
-            }
+                var threads = await bc.GetCatalogForBoardAsync(cb.UrlSlug);
 
-            threadLst.ItemsSource = threads.OrderByDescending(t => t.Posts);
-            threadLst.ScrollIntoView(threadLst.Items[0]);
+                if (threads == null || threads.Count() == 0)
+                {
+                    return;
+                }
 
-            (controlTabs.Items[2] as TabItem).Visibility = Visibility.Visible;
-            controlTabs.SelectedIndex = 2;
+                await Dispatcher.InvokeAsync(() =>
+                {
+                    threadLst.ItemsSource = threads.OrderByDescending(th => th.Posts);
+                    threadLst.ScrollIntoView(threadLst.Items[0]);
+
+                    (controlTabs.Items[2] as TabItem).Visibility = Visibility.Visible;
+                    controlTabs.SelectedIndex = 2;
+                });
+            });
+
+            t.Start();
         }
 
-        private async void threadLst_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void threadLst_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             BaseChan bc = siteLst.SelectedValue as BaseChan;
             ChanBoard cb = boardLst.SelectedValue as ChanBoard;
@@ -88,21 +106,31 @@ namespace xChan
 
             imageLst.ItemsSource = null;
 
-            var posts = await bc.GetPostsForTheadAsync(cct.BoardSlug, (int)cct.ThreadId);
 
-            if (posts == null || posts.Count() == 0)
+            Task t = new Task(async () =>
             {
-                return;
-            }
+                var posts = await bc.GetPostsForTheadAsync(cct.BoardSlug, (int)cct.ThreadId);
 
-            imageLst.ItemsSource = posts.Where(m => m.Files != null).SelectMany(m => m.Files);
-            if (imageLst.Items.Count > 0)
-            {
-                imageLst.ScrollIntoView(imageLst.Items[0]);
-            }
+                if (posts == null || posts.Count() == 0)
+                {
+                    return;
+                }
 
-            (controlTabs.Items[3] as TabItem).Visibility = Visibility.Visible;
-            controlTabs.SelectedIndex = 3;
+
+                await Dispatcher.InvokeAsync(() =>
+                {
+                    imageLst.ItemsSource = posts.Where(m => m.Files != null).SelectMany(m => m.Files);
+                    if (imageLst.Items.Count > 0)
+                    {
+                        imageLst.ScrollIntoView(imageLst.Items[0]);
+                    }
+
+                    (controlTabs.Items[3] as TabItem).Visibility = Visibility.Visible;
+                    controlTabs.SelectedIndex = 3;
+                });
+            });
+
+            t.Start();
         }
 
         private void controlTabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -115,18 +143,18 @@ namespace xChan
 
             int start = controlTabs.SelectedIndex + 1;
 
-            if (start== controlTabs.Items.Count)
+            if (start == controlTabs.Items.Count)
             {
                 // the last tab has been selected
                 return;
             }
 
-            for(; start < controlTabs.Items.Count; start++)
+            for (; start < controlTabs.Items.Count; start++)
             {
                 (controlTabs.Items[start] as TabItem).Visibility = Visibility.Hidden;
             }
 
-            switch(controlTabs.SelectedIndex)
+            switch (controlTabs.SelectedIndex)
             {
                 case 0:
                     siteLst.SelectedIndex = -1;
