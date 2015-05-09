@@ -68,6 +68,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helpers\InteropHelper.cs" />
     <Compile Include="Helpers\SettingsBinder.cs" />
     <Compile Include="previewWnd.xaml.cs">
       <DependentUpon>previewWnd.xaml</DependentUpon>

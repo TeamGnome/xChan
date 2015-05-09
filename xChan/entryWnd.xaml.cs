@@ -15,6 +15,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using xChan.Helpers;
 
 namespace xChan
 {
@@ -189,15 +190,10 @@ namespace xChan
             }
         }
 
-        private void downloadThreadClick(object sender, RoutedEventArgs e)
-        {
-            var mi = sender as MenuItem;
-            var dc = mi.DataContext;
-            return;
-        }
-
         private void imageDownloadBtn_Click(object sender, RoutedEventArgs e)
         {
+            ChanCatalogThread cct = threadLst.SelectedValue as ChanCatalogThread;
+
             string path = string.IsNullOrEmpty(Properties.Settings.Default.RootFolder) ? "DUMP" : Properties.Settings.Default.RootFolder;
             if (!Directory.Exists(path))
             {
@@ -210,13 +206,32 @@ namespace xChan
                 Directory.CreateDirectory(allPath);
             }
 
+            string topicPath = Path.Combine(path, string.Format("{0}-{1}", cct.BoardSlug, cct.ThreadId));
+            if (!Directory.Exists(topicPath))
+            {
+                Directory.CreateDirectory(topicPath);
+            }
+
+
             List<Task> tl = new List<Task>();
             foreach (ChanPostFile item in imageLst.SelectedItems)
             {
-                using (WebClient wc = new WebClient())
+                string itemPath = Path.Combine(allPath, string.Format("{0}{1}", item.MD5String, item.Extension));
+
+                if(!File.Exists(itemPath))
                 {
-                    var dlTask = wc.DownloadFileTaskAsync(item.Uri, Path.Combine(allPath, string.Format("{0}{1}", item.MD5String, item.Extension)));
-                    tl.Add(dlTask);
+                    using (WebClient wc = new WebClient())
+                    {
+                        var dlTask = wc.DownloadFileTaskAsync(item.Uri, itemPath);
+                        tl.Add(dlTask);
+                    }
+                }
+
+                string linkPath = Path.Combine(topicPath, string.Format("{0}{1}", item.Name, item.Extension));
+
+                if (!File.Exists(linkPath))
+                {
+                    InteropHelper.CreateHardLink(linkPath, itemPath, IntPtr.Zero);
                 }
             }
 
