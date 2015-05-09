@@ -6,7 +6,8 @@
         xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:local="clr-namespace:xChan"
         mc:Ignorable="d"
-        Title="xChan" Height="720" Width="1280">
+        Title="xChan" Height="720" Width="1280"
+        BorderBrush="{DynamicResource AccentColorBrush}" BorderThickness="2">
     <Window.Resources>
         <Style TargetType="{x:Type TabItem}">
             <Setter Property="Template">
@@ -30,11 +31,15 @@
         </Style>
     </Window.Resources>
     <Grid>
-        <TabControl x:Name="controlTabs" TabStripPlacement="Left" SelectionChanged="controlTabs_SelectionChanged">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="32" />
+        </Grid.RowDefinitions>
+        <TabControl x:Name="controlTabs" TabStripPlacement="Left" SelectionChanged="controlTabs_SelectionChanged" Grid.Row="0">
             <TabItem>
                 <TabItem.Header>SITE</TabItem.Header>
                 <Grid>
-                    <ListView x:Name="siteLst" Grid.Row="1" Grid.Column="0" Margin="4" SelectionMode="Single" SelectionChanged="siteLst_SelectionChanged" BorderThickness="0">
+                    <ListView x:Name="siteLst" Margin="4" SelectionMode="Single" SelectionChanged="siteLst_SelectionChanged" BorderThickness="0">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <Grid MinHeight="36" MaxHeight="48" Width="Auto" Margin="8,6">
@@ -54,7 +59,7 @@
             <TabItem Visibility="Hidden">
                 <TabItem.Header>BOARD</TabItem.Header>
                 <Grid>
-                    <ListView x:Name="boardLst" Grid.Row="1" Grid.Column="1" Margin="4" SelectionMode="Single" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionChanged="boardLst_SelectionChanged" BorderThickness="0">
+                    <ListView x:Name="boardLst" Margin="4" SelectionMode="Single" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionChanged="boardLst_SelectionChanged" BorderThickness="0">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock TextWrapping="Wrap" Margin="8,4">
@@ -80,7 +85,7 @@
             <TabItem Visibility="Hidden">
                 <TabItem.Header>THREAD</TabItem.Header>
                 <Grid>
-                    <ListView x:Name="threadLst" Grid.Row="1" Grid.Column="2" Margin="4" SelectionMode="Single" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="false" SelectionChanged="threadLst_SelectionChanged" BorderThickness="0">
+                    <ListView x:Name="threadLst" Margin="4" SelectionMode="Single" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="false" SelectionChanged="threadLst_SelectionChanged" BorderThickness="0">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <Grid Margin="0,10" HorizontalAlignment="Stretch">
@@ -194,10 +199,58 @@
                         </ListView.ItemsPanel>
                     </ListView>
                     <Button x:Name="imageDownloadBtn" Grid.Row="1" HorizontalAlignment="Left" Margin="8,4" Click="imageDownloadBtn_Click">
-                        _Download
+                        <StackPanel Orientation="Horizontal" Margin="2,0,3,0">
+                            <Rectangle Width="8" Height="12" Margin="0,1,6,0" VerticalAlignment="Center">
+                                <Rectangle.Fill>
+                                    <VisualBrush Visual="{StaticResource appbar_download}" Stretch="Uniform" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <TextBlock VerticalAlignment="Center">DOWNLOAD</TextBlock>
+                        </StackPanel>
                     </Button>
                 </Grid>
             </TabItem>
         </TabControl>
+        <Grid Background="{StaticResource AccentColorBrush}" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal" Grid.Column="0" Margin="4" HorizontalAlignment="Left">
+                <TextBlock x:Name="SiteCrumb" Margin="0,0,4,0" Visibility="Hidden">{Site}</TextBlock>
+                <TextBlock x:Name="BoardCrumb" Margin="0,0,4,0" Visibility="Hidden">{Board}</TextBlock>
+                <TextBlock x:Name="ThreadCrumb" Margin="0,0,4,0" Visibility="Hidden">{Thread}</TextBlock>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Grid.Column="1" Margin="4" HorizontalAlignment="Right">
+                <StackPanel x:Name="LoadingBlock" Orientation="Horizontal" Margin="4,0" Visibility="Hidden">
+                    <Border Width="20" Height="24" Margin="0,0,6,0">
+                        <Rectangle x:Name="RotatingLoadingIcon" Width="12" Height="12" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Rectangle.Fill>
+                                <VisualBrush Visual="{StaticResource appbar_refresh}" Stretch="Uniform" />
+                            </Rectangle.Fill>
+                            <Rectangle.Triggers>
+                                <EventTrigger RoutedEvent="Rectangle.Loaded">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="RotatingLoadingIcon" Storyboard.TargetProperty="LayoutTransform.Angle" From="0" To="360" By="15" RepeatBehavior="Forever" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Rectangle.Triggers>
+                            <Rectangle.LayoutTransform>
+                                <RotateTransform Angle="0" />
+                            </Rectangle.LayoutTransform>
+                        </Rectangle>
+                    </Border>
+                    <TextBlock VerticalAlignment="Center">LOADING...</TextBlock>
+                </StackPanel>
+            </StackPanel>
+            <Grid.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Foreground" Value="{StaticResource LabelTextBrush}" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                </Style>
+            </Grid.Resources>
+        </Grid>
     </Grid>
 </Controls:MetroWindow>

@@ -42,6 +42,8 @@ namespace xChan
             boardLst.ItemsSource = null;
             threadLst.ItemsSource = null;
 
+            LoadingBlock.Visibility = Visibility.Visible;
+
             Task t = new Task(async () =>
             {
                 var boards = await bc.GetBoardsAsync();
@@ -53,6 +55,9 @@ namespace xChan
 
                     (controlTabs.Items[1] as TabItem).Visibility = Visibility.Visible;
                     controlTabs.SelectedIndex = 1;
+
+                    LoadingBlock.Visibility = Visibility.Hidden;
+                    updateBreadCrumbs(bc.DisplayName);
                 });
             });
 
@@ -71,6 +76,8 @@ namespace xChan
 
             threadLst.ItemsSource = null;
 
+            LoadingBlock.Visibility = Visibility.Visible;
+
             Task t = new Task(async () =>
             {
                 var threads = await bc.GetCatalogForBoardAsync(cb.UrlSlug);
@@ -87,6 +94,9 @@ namespace xChan
 
                     (controlTabs.Items[2] as TabItem).Visibility = Visibility.Visible;
                     controlTabs.SelectedIndex = 2;
+
+                    LoadingBlock.Visibility = Visibility.Hidden;
+                    updateBreadCrumbs(bc.DisplayName, cb.Title);
                 });
             });
 
@@ -105,6 +115,8 @@ namespace xChan
             }
 
             imageLst.ItemsSource = null;
+
+            LoadingBlock.Visibility = Visibility.Visible;
 
 
             Task t = new Task(async () =>
@@ -127,6 +139,9 @@ namespace xChan
 
                     (controlTabs.Items[3] as TabItem).Visibility = Visibility.Visible;
                     controlTabs.SelectedIndex = 3;
+
+                    LoadingBlock.Visibility = Visibility.Hidden;
+                    updateBreadCrumbs(bc.DisplayName, cb.Title, string.Format("{0} - {1}", cct.ThreadId, cct.SubjectSafe));
                 });
             });
 
@@ -158,12 +173,15 @@ namespace xChan
             {
                 case 0:
                     siteLst.SelectedIndex = -1;
+                    updateBreadCrumbs();
                     break;
                 case 1:
                     boardLst.SelectedIndex = -1;
+                    updateBreadCrumbs(SiteCrumb.Text.TrimEnd(new [] { ' ', '>' }));
                     break;
                 case 2:
                     threadLst.SelectedIndex = -1;
+                    updateBreadCrumbs(SiteCrumb.Text.TrimEnd(new[] { ' ', '>' }), BoardCrumb.Text.TrimEnd(new[] { ' ', '>' }));
                     break;
                 case 3:
                     imageLst.SelectedIndex = -1;
@@ -196,6 +214,58 @@ namespace xChan
                 {
                     wc.DownloadFile(item.Uri, Path.Combine(@"DUMP", string.Format("{0}{1}", item.MD5String, item.Extension)));
                 }
+            }
+        }
+
+        private void updateBreadCrumbs(string site = "", string board = "", string thread = "")
+        {
+            bool setBoldPart = false;
+
+            if (string.IsNullOrEmpty(thread))
+            {
+                ThreadCrumb.FontWeight = FontWeight.FromOpenTypeWeight(400);
+                ThreadCrumb.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                ThreadCrumb.FontWeight = FontWeight.FromOpenTypeWeight(700);
+                ThreadCrumb.Visibility = Visibility.Visible;
+                ThreadCrumb.Text = thread;
+                setBoldPart = true;
+            }
+
+            if (string.IsNullOrEmpty(board))
+            {
+                BoardCrumb.FontWeight = FontWeight.FromOpenTypeWeight(400);
+                BoardCrumb.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                BoardCrumb.FontWeight = FontWeight.FromOpenTypeWeight(setBoldPart ? 400 : 700);
+                BoardCrumb.Visibility = Visibility.Visible;
+                BoardCrumb.Text = board;
+                if (setBoldPart)
+                {
+                    BoardCrumb.Text += " >";
+                }
+                setBoldPart = true;
+            }
+
+            if (string.IsNullOrEmpty(site))
+            {
+                SiteCrumb.FontWeight = FontWeight.FromOpenTypeWeight(400);
+                SiteCrumb.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                SiteCrumb.FontWeight = FontWeight.FromOpenTypeWeight(setBoldPart ? 400 : 700);
+                SiteCrumb.Visibility = Visibility.Visible;
+                SiteCrumb.Text = site;
+                if (setBoldPart)
+                {
+                    SiteCrumb.Text += " >";
+                }
+                setBoldPart = true;
             }
         }
     }
