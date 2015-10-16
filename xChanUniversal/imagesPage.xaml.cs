@@ -46,5 +46,11 @@ namespace xChan
             imageLst.ItemsSource = src.Where(m => m.Files != null).SelectMany(m => m.Files);
          }
       }
+
+      private void Image_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+      {
+         ChanPostFile file = (sender as Image).DataContext as ChanPostFile;
+         Frame.Navigate(typeof(previewPage), new Uri(file.Uri));
+      }
    }
 }

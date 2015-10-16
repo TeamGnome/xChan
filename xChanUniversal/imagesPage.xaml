@@ -16,7 +16,7 @@
       <ListView x:Name="imageLst" Grid.Row="0" Margin="4" SelectionMode="Extended" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderThickness="0">
          <ListView.ItemTemplate>
             <DataTemplate>
-               <Image Source="{Binding ThumbnailUri}" Grid.Column="0" Width="128" MaxHeight="128" Stretch="Uniform"  Margin="4" VerticalAlignment="Top" />
+               <Image Source="{Binding ThumbnailUri}" Grid.Column="0" Width="128" Height="128" Stretch="UniformToFill"  Margin="4" VerticalAlignment="Top" DoubleTapped="Image_DoubleTapped" />
             </DataTemplate>
          </ListView.ItemTemplate>
          <ListView.ItemsPanel>
