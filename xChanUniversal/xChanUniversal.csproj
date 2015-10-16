@@ -99,6 +99,9 @@
     <Compile Include="boardPage.xaml.cs">
       <DependentUpon>boardPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="imagesPage.xaml.cs">
+      <DependentUpon>imagesPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -129,6 +132,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="boardPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="imagesPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

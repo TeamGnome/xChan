@@ -18,7 +18,7 @@
          </ListView.ItemTemplate>
          <ListView.ItemsPanel>
             <ItemsPanelTemplate>
-               <VirtualizingStackPanel />
+               <ItemsStackPanel />
             </ItemsPanelTemplate>
          </ListView.ItemsPanel>
       </ListView>

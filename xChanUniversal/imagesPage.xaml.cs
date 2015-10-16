@@ -16,42 +16,35 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
-
 namespace xChan
 {
    /// <summary>
    /// An empty page that can be used on its own or navigated to within a Frame.
    /// </summary>
-   public sealed partial class threadPage : Page
+   public sealed partial class imagesPage : Page
    {
       private BaseChan chanSite { get; set; }
       private ChanBoard chanBoard { get; set; }
+      private ChanCatalogThread chanThread { get; set; }
 
-      public threadPage()
+      public imagesPage()
       {
          this.InitializeComponent();
       }
-
       protected override async void OnNavigatedTo(NavigationEventArgs e)
       {
          base.OnNavigatedTo(e);
 
-         var navData = e.Parameter as Tuple<BaseChan, ChanBoard>;
+         var navData = e.Parameter as Tuple<BaseChan, ChanBoard, ChanCatalogThread>;
          chanSite = navData.Item1;
          chanBoard = navData.Item2;
+         chanThread = navData.Item3;
+
          if (chanSite != null)
          {
-            var src = await chanSite.GetCatalogForBoardAsync(chanBoard.UrlSlug);
-            threadLst.ItemsSource = src;
+            var src = await chanSite.GetPostsForTheadAsync(chanBoard.UrlSlug, (int)chanThread.ThreadId);
+            imageLst.ItemsSource = src.Where(m => m.Files != null).SelectMany(m => m.Files);
          }
-      }
-
-      private void threadLst_SelectionChanged(object sender, SelectionChangedEventArgs e)
-      {
-         ChanCatalogThread chanThread = threadLst.SelectedValue as ChanCatalogThread;
-         if (chanBoard == null) return;
-
-         Frame.Navigate(typeof(imagesPage), new Tuple<BaseChan, ChanBoard, ChanCatalogThread>(chanSite, chanBoard, chanThread));
       }
    }
 }
