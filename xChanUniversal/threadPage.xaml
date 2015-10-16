@@ -1,0 +1,69 @@
+﻿<Page
+    x:Class="xChan.threadPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:xChan"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+   <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+      <ListView x:Name="threadLst" Margin="4" SelectionMode="Single" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderThickness="0">
+         <ListView.ItemTemplate>
+            <DataTemplate>
+               <Grid Margin="4,10" HorizontalAlignment="Stretch">
+                  <Grid.ColumnDefinitions>
+                     <ColumnDefinition Width="130" />
+                     <ColumnDefinition Width="*" />
+                  </Grid.ColumnDefinitions>
+                  <Grid.RowDefinitions>
+                     <RowDefinition Height="Auto" />
+                     <RowDefinition Height="Auto" />
+                  </Grid.RowDefinitions>
+                  <Image Width="120" MaxHeight="120" Margin="0,0,10,0" Source="{Binding ThumbnailUri}" VerticalAlignment="Top" HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="0" />
+                  <Grid HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="1">
+                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                     </Grid.RowDefinitions>
+                     <TextBlock Text="{Binding SubjectSafe}" FontWeight="Bold" TextWrapping="Wrap"  Grid.Row="0" />
+                     <TextBlock Text="{Binding ContentSafe}" TextWrapping="Wrap" Grid.Row="1" MaxHeight="175" />
+                  </Grid>
+                  <Grid HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,10,0,0">
+                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="5*" />
+                        <ColumnDefinition Width="5*" />
+                     </Grid.ColumnDefinitions>
+                     <TextBlock TextAlignment="Left" Grid.Column="0">
+                        <Run Text="{Binding Posts}" /> posts
+                     </TextBlock>
+                     <TextBlock TextAlignment="Center" Grid.Column="1">
+                        <Run Text="{Binding Files}" /> files
+                     </TextBlock>
+                     <TextBlock TextAlignment="Center" Grid.Column="2">
+                        Created <Run Text="{Binding CreatedString}" />
+                     </TextBlock>
+                     <TextBlock TextAlignment="Right" Grid.Column="3">
+                        Updated <Run Text="{Binding PostedString}" />
+                     </TextBlock>
+                     <Grid.Resources>
+                        <Style TargetType="TextBlock">
+                           <Setter Property="FontSize" Value="8" />
+                           <Setter Property="FontWeight" Value="SemiBold" />
+                        </Style>
+                     </Grid.Resources>
+                  </Grid>
+               </Grid>
+            </DataTemplate>
+         </ListView.ItemTemplate>
+         <ListView.ItemsPanel>
+            <ItemsPanelTemplate>
+               <VirtualizingStackPanel />
+            </ItemsPanelTemplate>
+         </ListView.ItemsPanel>
+      </ListView>
+   </Grid>
+</Page>
